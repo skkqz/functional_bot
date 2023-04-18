@@ -1,7 +1,7 @@
 import json
 import requests
-from typing import Dict
-from loader import OW_API, ERD_API, CURATE_API
+from typing import Dict, Any
+from loader import OW_API, ERD_API
 
 
 def get_weather_data(city: str, lan: str = 'ru', units: str = 'metric') -> Dict:
@@ -23,7 +23,14 @@ def get_weather_data(city: str, lan: str = 'ru', units: str = 'metric') -> Dict:
         print(f'Произошла ошибка {_ex}.')
 
 
-def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', amount: float = 1):
+def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', amount: float = 1) -> Any:
+    """
+    Получение конвертации валюты
+    :param currency_from: Из какой валюты.
+    :param currency_to: В какую валюту.
+    :param amount: Сумма конвертации
+    :return: Словарь с данными конвертации
+    """
 
     url_api = f"https://api.apilayer.com/exchangerates_data/convert?to=" \
               f"{currency_to}&from={currency_from}&amount={amount}"
@@ -32,10 +39,15 @@ def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', am
     }
 
     try:
+        # Первый запрос к api может долго обрабатываться или получить ошибку 500
         response = requests.get(url=url_api, headers=headers, data={})
-        print(response.text)
+        response_json = json.loads(response.text)
+
+        if response.status_code != 200:
+            print(f'Произошла ошибка. Повторите запрос')
+            return None
+
+        return response_json
+
     except (Exception, TimeoutError) as _ex:
         print(f'Произошла ошибка {_ex}')
-
-
-get_conversion_data(amount=5)
