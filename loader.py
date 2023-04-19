@@ -1,9 +1,8 @@
-import os
-from dotenv import load_dotenv
+from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from data.config import BOT_API
 
-load_dotenv()
-
-BOT_API = os.getenv('BOT_API')
-OW_API = os.getenv('OW_API')
-ERD_API = os.getenv('ERD_API')
-CURATE_API = os.getenv('CURATE_API')
+# bot = Bot(token=BOT_API, parse_mode=types.ParseMode.HTML)
+bot = Bot(token=BOT_API)
+storage = MemoryStorage()
+dp = Dispatcher(bot=bot, storage=storage)

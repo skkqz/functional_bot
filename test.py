@@ -1,5 +1,4 @@
-from loader import BOT_API
-
+from data.config import BOT_API
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -36,7 +35,6 @@ async def cmd_start(message: types.Message) -> None:
 
 @dp.message_handler(commands=['weather'])
 async def cmd_weather(message: types.Message) -> None:
-
     """Запрос у пользователя название города в котором нужно получить погодные условия"""
 
     await message.answer(text='Введите название города:')
@@ -45,7 +43,6 @@ async def cmd_weather(message: types.Message) -> None:
 
 @dp.message_handler(state=DataCollection.city)
 async def get_weather(message: types.Message, state: FSMContext) -> None:
-
     """Вывод пользователю данных о погоде в городе."""
 
     try:
@@ -73,7 +70,6 @@ async def get_weather(message: types.Message, state: FSMContext) -> None:
 
 @dp.message_handler(commands=['conversion'])
 async def cmd_conversion(message: types.Message) -> None:
-
     """Запрос у пользователя какую валют нужно конвертировать"""
 
     await message.answer(text='Введите какую валюту нужно конвертировать:\nПример: USD')
@@ -82,7 +78,6 @@ async def cmd_conversion(message: types.Message) -> None:
 
 @dp.message_handler(state=DataCollection.conversion_from)
 async def get_conversion_form(message: types.Message, state: FSMContext):
-
     """Запрос у пользователя из какой валюты нужно будет конвертировать"""
 
     async with state.proxy() as data:
@@ -94,7 +89,6 @@ async def get_conversion_form(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=DataCollection.conversion_to)
 async def get_conversion_amount(message: types.Message, state: FSMContext):
-
     """Запрос у пользователя количество валюты для конвертации"""
 
     async with state.proxy() as data:
@@ -106,7 +100,6 @@ async def get_conversion_amount(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=DataCollection.conversion_amount)
 async def get_conversion_amount(message: types.Message, state: FSMContext):
-
     """Получение данных от пользователя количество валюты для конвертации"""
 
     try:
@@ -126,6 +119,7 @@ async def get_conversion_amount(message: types.Message, state: FSMContext):
         print(f'Ошибка {_ex}')
     finally:
         await state.finish()
+
 
 if __name__ == '__main__':
     print('Бот включен')

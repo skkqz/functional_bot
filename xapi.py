@@ -1,7 +1,7 @@
 import json
 import requests
 from typing import Dict, Any
-from loader import OW_API, ERD_API
+from data.config import OW_API, ERD_API
 
 
 def get_weather_data(city: str, lan: str = 'ru', units: str = 'metric') -> Dict:
