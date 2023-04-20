@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from loader import dp
+from loader import dp, logger
 from api.api import get_conversion_data
 from states.data_collections import DataCollection
 
@@ -15,7 +15,7 @@ async def cmd_conversion(message: types.Message) -> None:
 
 
 @dp.message_handler(state=DataCollection.conversion_from)
-async def get_conversion_form(message: types.Message, state: FSMContext):
+async def get_conversion_form(message: types.Message, state: FSMContext) -> None:
     """Запрос у пользователя из какой валюты нужно будет конвертировать"""
 
     async with state.proxy() as data:
@@ -26,7 +26,7 @@ async def get_conversion_form(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=DataCollection.conversion_to)
-async def get_conversion_amount(message: types.Message, state: FSMContext):
+async def get_conversion_to(message: types.Message, state: FSMContext) -> None:
     """Запрос у пользователя количество валюты для конвертации"""
 
     async with state.proxy() as data:
@@ -37,7 +37,7 @@ async def get_conversion_amount(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=DataCollection.conversion_amount)
-async def get_conversion_amount(message: types.Message, state: FSMContext):
+async def get_conversion_amount(message: types.Message, state: FSMContext) -> None:
     """Получение данных от пользователя количество валюты для конвертации"""
 
     try:
@@ -51,10 +51,22 @@ async def get_conversion_amount(message: types.Message, state: FSMContext):
                 currency_to=data['conversion_to'],
                 amount=data['conversion_amount']
             )
-            print(result)
-            await test.delete()
-    except Exception as _ex:
-        await message.answer('Введены не верные данные. Проверьте правильность введённых данных и повторите запрос.')
-        print(f'Ошибка {_ex}')
+
+            if result is not None:
+                """Вывод результата конвертации валюты"""
+
+                await test.delete()
+                text_result = f'Курс на {result["date"]} - ' \
+                              f'{round(result["info"]["rate"], 2)} {result["query"]["to"]}\n' \
+                              f'{result["query"]["amount"]} {result["query"]["from"]}' \
+                              f' = {round(result["result"], 2)} {result["query"]["to"]}'
+                await message.answer(text=text_result)
+            else:
+                await message.answer('Введены не верные данные.'
+                                     ' Проверьте правильность введённых данных и повторите запрос.')
+                await test.delete()
+    except (Exception, TimeoutError) as _ex:
+        await message.answer('Произошла непредвиденная ошибка. Повторите запрос позже.')
+        logger.error(f'Ошибка: {_ex}')
     finally:
         await state.finish()

@@ -10,6 +10,6 @@ async def command_start(message: types.Message) -> None:
         f'\nЯ помогу вам:\n'
         f'/weather - Узнать погоду в указанном городе.\n'
         f'/conversion - Конвертация валюты.\n'
-        f'/cute_animals - Вывод случайной картинки милого животных.\n'
+        f'/cute_fox - Случайная картинка лисички.\n'
         f'/survey - Создать опрос в группе.'
     )

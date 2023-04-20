@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from loader import dp
+from loader import dp, logger
 from api.api import get_weather_data
 from states.data_collections import DataCollection
 
@@ -35,7 +35,7 @@ async def get_weather(message: types.Message, state: FSMContext) -> None:
             await message.answer(text=f'Указанный город не найден. Проверьте введённые данные.')
 
     except Exception as _ex:
-        await message.answer(text='Произошла не предвиденная ошибка. Пожалуйста повторите запрос позже.')
-        print(f'Произошла неожиданная ошибка {_ex}')
+        await message.answer('Произошла непредвиденная ошибка. Повторите запрос позже.')
+        logger.error(f'Ошибка: {_ex}')
     finally:
         await state.finish()

@@ -14,13 +14,10 @@ def get_weather_data(city: str, lan: str = 'ru', units: str = 'metric') -> Dict:
     """
 
     url_api = f'https://api.openweathermap.org/data/2.5/weather?q={city}&lang={lan}&appid={OW_API}&units={units}'
-    try:
-        response = requests.get(url_api)
-        response_json = json.loads(response.text)
-        return response_json
+    response = requests.get(url_api)
+    response_json = json.loads(response.text)
 
-    except (Exception, TimeoutError) as _ex:
-        print(f'Произошла ошибка {_ex}.')
+    return response_json
 
 
 def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', amount: float = 1) -> Any:
@@ -38,16 +35,26 @@ def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', am
         'apikey': ERD_API
     }
 
-    try:
-        # Первый запрос к api может долго обрабатываться или получить ошибку 500
-        response = requests.get(url=url_api, headers=headers, data={})
-        response_json = json.loads(response.text)
+    # Первый запрос к api может долго обрабатываться или получить ошибку 500
+    response = requests.get(url=url_api, headers=headers, data={})
+    response_json = json.loads(response.text)
 
-        if response.status_code != 200:
-            print(f'Произошла ошибка. Повторите запрос')
-            return None
+    if response.status_code != 200:
+        return None
 
-        return response_json
+    return response_json
 
-    except (Exception, TimeoutError) as _ex:
-        print(f'Произошла ошибка {_ex}')
+
+def get_photo_fox():
+
+    """
+    Api для генерации случайного фото лисички.
+    :return: Список с url ссылкой фото лисички
+    """
+    # Выбрал этот api вместо хранения фотографий милых животных в репозитории
+
+    url_api = 'https://randomfox.ca/floof/'
+    response = requests.get(url_api)
+    response_json = json.loads(response.text)
+
+    return response_json
