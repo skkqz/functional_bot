@@ -7,11 +7,14 @@ from aiogram.utils import exceptions
 from data.config import ID_GROUP
 from states.data_poll_group import DataPoolGroup
 from loader import dp, bot, logger
+from filters.ia_admin import IsAdmin
 from keyboards.inline.btn_poll_group import choice
 
 
-@dp.message_handler(Command('survey'))
+@dp.message_handler(Command('survey'), IsAdmin())
 async def command_survey(message: types.Message) -> None:
+
+    """Команда запускает событие для создания опроса в группе."""
 
     await message.answer('Какой будет опрос?', reply_markup=choice)
 
@@ -19,14 +22,18 @@ async def command_survey(message: types.Message) -> None:
 @dp.message_handler(state=DataPoolGroup.question)
 async def survey_question(message: types.Message, state: FSMContext) -> None:
 
+    """Сохраняем вопрос. Запрашиваем у пользователя список ответов."""
+
     async with state.proxy() as data:
         data['question'] = message.text
-    await message.answer('Введите пожалуйста варианты ответов разделя их ";" (Должно быть минимум 2 вопроса)')
+    await message.answer('Введите пожалуйста варианты ответов разделя их ";" (Должно быть минимум 2 вопроса).')
     await DataPoolGroup.next()
 
 
 @dp.message_handler(state=DataPoolGroup.list_of_options)
 async def survey_list_of_options(message: types.Message, state: FSMContext) -> None:
+
+    """Сохраняем список ответов. Выводим результат пользователю."""
 
     try:
         async with state.proxy() as data:
@@ -47,6 +54,7 @@ async def survey_list_of_options(message: types.Message, state: FSMContext) -> N
 @dp.callback_query_handler(lambda call: call.data.startswith('is_anonymous'))
 async def callback_is_anonymous(call: CallbackQuery, state: FSMContext) -> None:
 
+    """Обработка inline клавиатуры. Сохраняем ответ."""
     await call.message.delete_reply_markup()
     async with state.proxy() as data:
         if call.data == 'is_anonymous_yes':
