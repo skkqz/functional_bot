@@ -11,6 +11,10 @@ from filters.ia_admin import IsAdmin
 from keyboards.inline.btn_poll_group import choice
 
 
+# IsAdmin() Моя логика тут в том, чтобы ограничить пользователей группы в командах бота. По желанию это можно
+# настроить для любой команды.
+# Тут я использовал машинное состояние FSMContext для того, чтобы хранить в переменных нужные мне данные и
+# передавать их из хендлера в хендлер.
 @dp.message_handler(Command('survey'), IsAdmin())
 async def command_survey(message: types.Message) -> None:
 
@@ -55,6 +59,7 @@ async def survey_list_of_options(message: types.Message, state: FSMContext) -> N
 async def callback_is_anonymous(call: CallbackQuery, state: FSMContext) -> None:
 
     """Обработка inline клавиатуры. Сохраняем ответ."""
+
     await call.message.delete_reply_markup()
     async with state.proxy() as data:
         if call.data == 'is_anonymous_yes':

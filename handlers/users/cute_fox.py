@@ -3,12 +3,13 @@ from aiogram.dispatcher.filters import Command
 from aiogram.types import CallbackQuery
 
 from loader import dp, logger
-from api.api import get_photo_fox
+from api.api_photo_fox import get_photo_fox
 from keyboards.inline.btn_cute_fox import choice
 
 
 @dp.message_handler(Command('cute_fox'))
 async def command_cute_fox(message: types.Message) -> None:
+
     """Вывод случайной фотографии лисички"""
 
     try:

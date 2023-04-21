@@ -2,12 +2,16 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from loader import dp, logger
-from api.api import get_conversion_data
+from api.api_conversion import get_conversion_data
 from states.data_collections import DataCollection
 
 
+# Тут я также использовал FSMContext для хранения нужной информации от пользователя.
+# Собрал нужные данные от пользователя для апи, передал их в get_conversion_data(), вывел пользователю результат или
+# текст ошибки.
 @dp.message_handler(Command('conversion'))
 async def cmd_conversion(message: types.Message) -> None:
+
     """Запрос у пользователя какую валют нужно конвертировать"""
 
     await message.answer(text='Введите какую валюту нужно конвертировать:\nПример: USD')
@@ -16,6 +20,7 @@ async def cmd_conversion(message: types.Message) -> None:
 
 @dp.message_handler(state=DataCollection.conversion_from)
 async def get_conversion_form(message: types.Message, state: FSMContext) -> None:
+
     """Запрос у пользователя из какой валюты нужно будет конвертировать"""
 
     async with state.proxy() as data:
@@ -27,6 +32,7 @@ async def get_conversion_form(message: types.Message, state: FSMContext) -> None
 
 @dp.message_handler(state=DataCollection.conversion_to)
 async def get_conversion_to(message: types.Message, state: FSMContext) -> None:
+
     """Запрос у пользователя количество валюты для конвертации"""
 
     async with state.proxy() as data:
@@ -38,6 +44,7 @@ async def get_conversion_to(message: types.Message, state: FSMContext) -> None:
 
 @dp.message_handler(state=DataCollection.conversion_amount)
 async def get_conversion_amount(message: types.Message, state: FSMContext) -> None:
+
     """Получение данных от пользователя количество валюты для конвертации"""
 
     try:

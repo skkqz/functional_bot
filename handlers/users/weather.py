@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from loader import dp, logger
-from api.api import get_weather_data
+from api.api_weather import get_weather_data
 from states.data_collections import DataCollection
 
 
@@ -16,6 +16,7 @@ async def cmd_weather(message: types.Message) -> None:
 
 @dp.message_handler(state=DataCollection.city)
 async def get_weather(message: types.Message, state: FSMContext) -> None:
+
     """Вывод пользователю данных о погоде в городе."""
 
     try:
