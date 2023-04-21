@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery
 
 from loader import dp, logger
 from api.api import get_photo_fox
-from keyboards.inline.btn_more import choice
+from keyboards.inline.btn_cute_fox import choice
 
 
 @dp.message_handler(Command('cute_fox'))

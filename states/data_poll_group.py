@@ -8,5 +8,4 @@ class DataPoolGroup(StatesGroup):
 
     question = State()
     list_of_options = State()
-    correct_answer = State()
     is_anonymous = State()
