@@ -8,7 +8,8 @@ from states.data_collections import DataCollection
 
 @dp.message_handler(Command('weather'))
 async def cmd_weather(message: types.Message) -> None:
-    """Запрос у пользователя название города в котором нужно получить погодные условия"""
+
+    """Запрос у пользователя название города в котором нужно узнать погодные условия"""
 
     await message.answer(text='Введите название города:')
     await DataCollection.city.set()
@@ -23,7 +24,7 @@ async def get_weather(message: types.Message, state: FSMContext) -> None:
         city = message.text
         get_result = get_weather_data(city)
 
-        # Проверю, что api отдал данные с кодом 200, если код другой
+        # Проверю, что получаю status_code 200
         if get_result.get('cod') == 200:
 
             text_result = f'{get_result["name"]} {round(get_result["main"]["temp"])}°C\n' \
@@ -35,7 +36,8 @@ async def get_weather(message: types.Message, state: FSMContext) -> None:
         else:
             await message.answer(text=f'Указанный город не найден. Проверьте введённые данные.')
 
-    except Exception as _ex:
+    except (Exception, TimeoutError) as _ex:
+        # Если произошло исключение, сообщаем пользователю и записываем ошибку в логи
         await message.answer('Произошла непредвиденная ошибка. Повторите запрос позже.')
         logger.error(f'Ошибка: {_ex}')
     finally:

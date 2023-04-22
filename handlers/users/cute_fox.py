@@ -10,7 +10,7 @@ from keyboards.inline.btn_cute_fox import choice
 @dp.message_handler(Command('cute_fox'))
 async def command_cute_fox(message: types.Message) -> None:
 
-    """Вывод случайной фотографии лисички"""
+    """Случайная фотографии лисички"""
 
     try:
         result = get_photo_fox()

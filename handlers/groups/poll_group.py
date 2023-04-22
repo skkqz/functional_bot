@@ -30,7 +30,7 @@ async def survey_question(message: types.Message, state: FSMContext) -> None:
 
     async with state.proxy() as data:
         data['question'] = message.text
-    await message.answer('Введите пожалуйста варианты ответов разделя их ";" (Должно быть минимум 2 вопроса).')
+    await message.answer('Введите пожалуйста варианты ответов разделя их ";" (Должно быть минимум 2 варианта).')
     await DataPoolGroup.next()
 
 
@@ -47,7 +47,7 @@ async def survey_list_of_options(message: types.Message, state: FSMContext) -> N
                                 options=data['list_of_options'],
                                 is_anonymous=data['is_anonymous'],
                                 )
-            await message.answer('Опрос был удачно создан')
+            await message.answer('Опрос был успешно создан')
     except (Exception, exceptions.PollError) as _ex:
         logger.error(f'Ошибка: {_ex}')
         await message.answer('Пожалуйста проверьте введённые данные и повторите команду')

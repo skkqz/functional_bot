@@ -19,7 +19,7 @@ def get_conversion_data(currency_from: str = 'USD', currency_to: str = 'RUB', am
         'apikey': ERD_API
     }
 
-    # Первый запрос к api может долго обрабатываться или получить ошибку 500
+    # Первый запрос к api может долго обрабатываться или получить status_code 500
     response = requests.get(url=url_api, headers=headers, data={})
     response_json = json.loads(response.text)
 

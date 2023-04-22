@@ -7,8 +7,8 @@ from loader import dp
 async def command_help(message: types.Message) -> None:
     await message.answer(
         f'Помощь по командам:\n'
-        f'/weather - Узнать погоду в указанном городе.\n'
+        f'/weather - Узнать погоду.\n'
         f'/conversion - Конвертация валюты.\n'
-        f'/cute_fox - Вывод случайной картинки милого животных.\n'
+        f'/cute_fox - Случайная картинка лисички.\n'
         f'/survey - Создать опрос в группе.'
     )

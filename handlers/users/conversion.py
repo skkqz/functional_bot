@@ -48,7 +48,7 @@ async def get_conversion_amount(message: types.Message, state: FSMContext) -> No
     """Получение данных от пользователя количество валюты для конвертации"""
 
     try:
-        test = await message.answer(text='Пожалуйста подождите...')
+        message_wait = await message.answer(text='Пожалуйста подождите...')
         message_int = int(message.text)
         async with state.proxy() as data:
             data['conversion_amount'] = message_int
@@ -62,7 +62,8 @@ async def get_conversion_amount(message: types.Message, state: FSMContext) -> No
             if result is not None:
                 """Вывод результата конвертации валюты"""
 
-                await test.delete()
+                # Удаление сообщения (Пожалуйста подождите...)
+                await message_wait.delete()
                 text_result = f'Курс на {result["date"]} - ' \
                               f'{round(result["info"]["rate"], 2)} {result["query"]["to"]}\n' \
                               f'{result["query"]["amount"]} {result["query"]["from"]}' \
@@ -71,7 +72,7 @@ async def get_conversion_amount(message: types.Message, state: FSMContext) -> No
             else:
                 await message.answer('Введены не верные данные.'
                                      ' Проверьте правильность введённых данных и повторите запрос.')
-                await test.delete()
+                await message_wait.delete()
     except (Exception, TimeoutError) as _ex:
         await message.answer('Произошла непредвиденная ошибка. Повторите запрос позже.')
         logger.error(f'Ошибка: {_ex}')
